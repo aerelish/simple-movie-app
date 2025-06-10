@@ -40,24 +40,22 @@ function Home() {
     }
 
   }
-
-  useEffect(() => {
-    const loadPopularMovies = async () => {
-      try {
-        const popularMovies = await getPopularMovies()
-        setMovies(popularMovies)
-      } catch (error) {
-        console.error("Error fetching popular movies:", error)
-        setError("Failed to load popular movies")
-      } finally {
-        console.log("Popular movies loaded")
-        setLoading(false)
-      }
-    } 
-
-    loadPopularMovies()
-
-  }, [])
+  
+  const loadPopularMovies = async () => {
+    try {
+      const popularMovies = await getPopularMovies()
+      setMovies(popularMovies)
+    } catch (error) {
+      console.error("Error fetching popular movies:", error)
+      setError("Failed to load popular movies")
+    } finally {
+      console.log("Popular movies loaded")
+      //await new Promise(r => setTimeout(r, 3000)); // Simulating a delay for loading effect
+      setLoading(false)
+    }
+  } 
+  
+  useEffect(() => { loadPopularMovies() }, [])
 
   /* doing so will work however this will run every time the component renders
   const movies = getPopularMovies()
@@ -85,7 +83,6 @@ function Home() {
     }
   ]
   */
-
   return (
     <div className="home">
       <form onSubmit={handleSearch} className="search-form">
@@ -109,12 +106,22 @@ function Home() {
           <div className="loading">Loading...</div>
         ) : (
           <div className="movies-grid">
-            {movies.map(movie => (
-            // movie.title.toLowerCase().startsWith(searchQuery.toLowerCase()) && (
-            //   <MovieCard key={movie.id} movie={movie}/> 
-            // )
-            <MovieCard key={movie.id} movie={movie}/>
-          ))}
+            {
+              movies.map(movie => (
+                // movie.title.toLowerCase().startsWith(searchQuery.toLowerCase()) && (
+                //   <MovieCard key={movie.id} movie={movie}/> 
+                // )
+                <MovieCard key={movie.id} movie={movie}/>
+              ))
+            }
+          </div>
+        )
+      }
+
+      { // adding condition so that when there are no movies will show no movies message
+        !error && !loading && movies.length === 0 && (
+          <div className="no-movies">
+            <h2>No Movies Found</h2>
           </div>
         )
       }
