@@ -10,6 +10,7 @@ export const useMovieContext = () => useContext(MovieContext);
 export const MovieProvider = ({ children }) => {
 
   const [favorites, setFavorites] = useState([]);
+  const [home, setHome] = useState(true);
 
   // gets stored favorites from localStorage when the component mounts
   // converts localStorage data which is in type string to JSON object using JSON.parse
@@ -45,7 +46,9 @@ export const MovieProvider = ({ children }) => {
     favorites,
     addToFavorites,
     removeFromFavorites,
-    isFavorite
+    isFavorite,
+    home,
+    setHome,
   };
 
   return (

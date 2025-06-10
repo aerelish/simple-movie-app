@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { getPopularMovies, fetchMovies } from "../services/api"
+import { useMovieContext } from '../context/MovieContext'
 
 import "../css/Home.css"
 
@@ -11,6 +12,8 @@ function Home() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
   const [movies, setMovies] = useState([])
+
+  const { home, setHome } = useMovieContext();
 
   const handleSearch = async (e) => {
     e.preventDefault()
@@ -37,6 +40,7 @@ function Home() {
       setError("Failed to search movies")
     } finally {
       setLoading(false)
+      setHome(false) // set home to false when searching
     }
 
   }
@@ -56,6 +60,13 @@ function Home() {
   } 
   
   useEffect(() => { loadPopularMovies() }, [])
+
+  useEffect(() => { 
+    if (home) {
+      loadPopularMovies()
+      setSearchQuery("") // reset search query when home is true
+    } 
+  }, [home])
 
   /* doing so will work however this will run every time the component renders
   const movies = getPopularMovies()
